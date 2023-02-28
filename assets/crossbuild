@@ -14,14 +14,14 @@ case "${CROSS_TRIPLE}" in
 	CROSS_TRIPLE="mipsel-linux-gnu" ;;
     powerpc64le-linux-gnu|powerpc|powerpc64|powerpc64le)
 	CROSS_TRIPLE="powerpc64le-linux-gnu" ;;
-    arm64-apple-darwin|osx|osx64|darwin|darwin64)
+    aarch64-apple-darwin|aarch-apple-darwin|arm64-apple-darwin|arm-apple-darwin|osx64arm)
 	CROSS_TRIPLE="aarch64-apple-darwin${DARWIN_VERSION}" ;;
     x86_64-apple-darwin|osx|osx64|darwin|darwin64)
 	CROSS_TRIPLE="x86_64-apple-darwin${DARWIN_VERSION}" ;;
     x86_64h-apple-darwin|osx64h|darwin64h|x86_64h)
 	CROSS_TRIPLE="x86_64h-apple-darwin${DARWIN_VERSION}" ;;
     i386-apple-darwin|osx32|darwin32)
-	CROSS_TRIPLE="i386-apple-darwin${DARWIN_VERSION}" ;;
+	echo "i386-apple-darwin not supported anymore." && exit 1 ;;
     *-apple-darwin)
 	CROSS_TRIPLE="${CROSS_TRIPLE}${DARWIN_VERSION}" ;;
     x86_64-w64-mingw32|windows|win64)

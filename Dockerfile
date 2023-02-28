@@ -143,4 +143,5 @@ ENV LD_LIBRARY_PATH /usr/osxcross/lib:$LD_LIBRARY_PATH
 ENTRYPOINT ["/usr/bin/crossbuild"]
 CMD ["/bin/bash"]
 WORKDIR /workdir
+RUN echo "version 2"
 COPY ./assets/crossbuild /usr/bin/crossbuild

@@ -1,12 +1,11 @@
 test: info clean helloworld
-	file helloworld
+	file helloworld | grep "$(EXPECTED)" > /dev/null || echo "\033[0;31m> FAIL: `file helloworld`\033[0m"
 
 test-win: info clean helloworld
-	file helloworld.exe
+	file helloworld.exe | grep "$(EXPECTED)" > /dev/null || echo "\033[0;31m> FAIL: `file helloworld.exe`\033[0m"
 
 info:
-	@echo "------------------------------------------------------------------------"
-	@echo CROSS_TRIPLE: $(CROSS_TRIPLE)
+	@echo "TEST: $(ORIGINAL) (actual: $(CROSS_TRIPLE))"
 
 clean:
 	@rm -f helloworld
