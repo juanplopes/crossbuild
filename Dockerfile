@@ -1,16 +1,12 @@
 FROM buildpack-deps:bullseye-curl
-MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
 RUN set -x; echo "Starting image build for Debian Stretch" \
+ && dpkg --add-architecture amd64                      \
  && dpkg --add-architecture arm64                      \
  && dpkg --add-architecture armel                      \
  && dpkg --add-architecture armhf                      \
  && dpkg --add-architecture i386                       \
- && dpkg --add-architecture mips                       \
- && dpkg --add-architecture mipsel                     \
- && dpkg --add-architecture powerpc                    \
- && dpkg --add-architecture ppc64el                    \
  && apt-get update                                     \
  && apt-get install -y -q                              \
         autoconf                                       \
@@ -23,6 +19,7 @@ RUN set -x; echo "Starting image build for Debian Stretch" \
         build-essential                                \
         ccache                                         \
         clang                                          \
+        crossbuild-essential-amd64                     \
         crossbuild-essential-arm64                     \
         crossbuild-essential-armel                     \
         crossbuild-essential-armhf                     \
@@ -31,6 +28,7 @@ RUN set -x; echo "Starting image build for Debian Stretch" \
         curl                                           \
         devscripts                                     \
         gdb                                            \
+        gcc                                            \
         git-core                                       \
         libtool                                        \
         llvm                                           \
@@ -51,11 +49,9 @@ RUN set -x; echo "Starting image build for Debian Stretch" \
 # FIXME: install gcc-multilib
 # FIXME: add mips and powerpc architectures
 
-
 # Install Windows cross-tools
 RUN apt-get install -y mingw-w64 \
  && apt-get clean
-
 
 # Install OSx cross-tools
 
@@ -94,12 +90,12 @@ RUN mkdir -p "/tmp/osxcross"                                                    
 
 
 # Create symlinks for triples and set default CROSS_TRIPLE
-ENV LINUX_TRIPLES=arm-linux-gnueabi,arm-linux-gnueabihf,aarch64-linux-gnu,mipsel-linux-gnu,powerpc64le-linux-gnu                  \
+ENV LINUX_TRIPLES=x86_64-linux-gnu,arm-linux-gnueabi,arm-linux-gnueabihf,aarch64-linux-gnu,mipsel-linux-gnu,powerpc64le-linux-gnu                  \
     DARWIN_TRIPLES=x86_64h-apple-darwin${DARWIN_VERSION},x86_64-apple-darwin${DARWIN_VERSION},aarch64-apple-darwin${DARWIN_VERSION},i386-apple-darwin${DARWIN_VERSION}  \
     WINDOWS_TRIPLES=i686-w64-mingw32,x86_64-w64-mingw32                                                                           \
     CROSS_TRIPLE=aarch64-apple-darwin
 COPY ./assets/osxcross-wrapper /usr/bin/osxcross-wrapper
-RUN mkdir -p /usr/x86_64-linux-gnu;                                                               \
+RUN mkdir -p /usr/x86_64-linux-gnu/bin /usr/aarch64-linux-gnu/bin;                 \
     for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                       \
       for bin in /usr/bin/$triple-*; do                                                           \
         if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then                  \
@@ -131,6 +127,13 @@ RUN mkdir -p /usr/x86_64-linux-gnu;                                             
       ln -s gcc /usr/$triple/bin/cc;                                                              \
       ln -s /usr/$triple /usr/x86_64-linux-gnu/$triple;                                           \
     done
+
+#RUN git clone https://github.com/tpoechtrager/cctools-port.git; \
+#    cd cctools-port/cctools; \
+#    ./configure; \
+#    make; \
+#    make install;
+
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
 # with more and more parameters
 
