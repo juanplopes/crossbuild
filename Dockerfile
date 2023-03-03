@@ -128,12 +128,6 @@ RUN mkdir -p /usr/x86_64-linux-gnu/bin /usr/aarch64-linux-gnu/bin;              
       ln -s /usr/$triple /usr/x86_64-linux-gnu/$triple;                                           \
     done
 
-#RUN git clone https://github.com/tpoechtrager/cctools-port.git; \
-#    cd cctools-port/cctools; \
-#    ./configure; \
-#    make; \
-#    make install;
-
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
 # with more and more parameters
 

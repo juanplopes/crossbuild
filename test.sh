@@ -17,7 +17,7 @@ shift $((OPTIND-1))
 
 [ "$1" = "--" ] && shift
 
-DOCKER_TEST_ARGS="--rm -v $(pwd)/test:/test -w /test"
+DOCKER_TEST_ARGS="-it --rm -v $(pwd)/test:/test -w /test"
 
 assert() {
   EXPECTED="$1"; shift
