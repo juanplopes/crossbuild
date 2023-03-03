@@ -11,6 +11,6 @@ fi
 cd $OPENSSL
 
 export CROSS_COMPILE=/usr/$CROSS_TRIPLE/bin/
-./Configure $OPENSSL_CONF --prefix=$PWD/$CROSS_TRIPLE
+./Configure $OPENSSL_CONF --prefix=$PWD/../$CROSS_TRIPLE
 make clean
 make install_runtime_libs install_dev
